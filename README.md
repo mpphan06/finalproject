@@ -9,16 +9,6 @@
 
 ---
 
-## RUNNING LOCALLY
-
-Open your browser and go to:
-```
-http://localhost:7892
-```
-Or open `index.html` directly in your browser.
-
----
-
 ## PUSHING UPDATES
 
 Any time you make changes, run these commands to update the live site:
