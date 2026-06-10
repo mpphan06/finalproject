@@ -3,13 +3,31 @@
 
 ---
 
-## HOW TO RUN
+## PLAY THE GAME
+
+**Live link:** https://mpphan06.github.io/finalproject/
+
+---
+
+## RUNNING LOCALLY
 
 Open your browser and go to:
 ```
 http://localhost:7892
 ```
 Or open `index.html` directly in your browser.
+
+---
+
+## PUSHING UPDATES
+
+Any time you make changes, run these commands to update the live site:
+```
+git add .
+git commit -m "your message here"
+git push
+```
+GitHub Pages will automatically update within a minute or two.
 
 ---
 
