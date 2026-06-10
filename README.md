@@ -45,7 +45,7 @@ perspectives to find the truth hidden beneath them.
 
 ### The Attic
 
-Floor 3 is locked. The key is somewhere on Floor 1.
+Floor 3 is locked and needs a key.
 
 ---
 
