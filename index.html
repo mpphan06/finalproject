@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hargrove Manor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- TITLE SCREEN -->
+  <div id="screen-title" class="screen active">
+    <div class="title-box">
+      <div class="title-manor-art">
+        <div class="manor-roof">  /\__/\__/\__/\  </div>
+        <div class="manor-body">
+          <span class="manor-wall">|</span>
+          <span class="manor-window">[||]</span>
+          <span class="manor-wall">  </span>
+          <span class="manor-door">[__]</span>
+          <span class="manor-wall">  </span>
+          <span class="manor-window">[||]</span>
+          <span class="manor-wall">|</span>
+        </div>
+        <div class="manor-base">|___________________|</div>
+      </div>
+      <h1 class="title-main">HARGROVE MANOR</h1>
+      <p class="title-sub">A Murder in Five Perspectives</p>
+      <div class="title-actions">
+        <button id="btn-new-game" class="btn-primary">Begin Investigation</button>
+        <button id="btn-continue" class="btn-secondary" style="display:none">Continue — Day <span id="continue-day"></span></button>
+        <button id="btn-reset" class="btn-ghost">Reset All Progress</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRIEFING SCREEN (start of each day) -->
+  <div id="screen-briefing" class="screen">
+    <div class="briefing-box">
+      <div class="briefing-header">
+        <span class="briefing-label">CASE FILE</span>
+        <span id="briefing-day" class="briefing-day">Day 1</span>
+      </div>
+      <h2 id="briefing-title">The Hargrove Case</h2>
+      <p id="briefing-body" class="briefing-body"></p>
+      <div class="briefing-rules">
+        <div class="rule-item">
+          <span class="rule-icon">&#9670;</span>
+          You may collect <strong>up to 5 pieces of evidence</strong> before time runs out.
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">&#9670;</span>
+          Move freely between all floors of the manor.
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">&#9670;</span>
+          The attic requires a key. Find it first.
+        </div>
+      </div>
+      <button id="btn-open-folder" class="btn-secondary folder-btn">&#128196; Read Suspect Statements</button>
+      <button id="btn-enter-manor" class="btn-primary">Enter the Manor</button>
+    </div>
+  </div>
+
+  <!-- MANOR SCREEN -->
+  <div id="screen-manor" class="screen">
+    <!-- HUD -->
+    <div class="hud">
+      <div class="hud-left">
+        <span class="hud-label">DAY <span id="hud-day">1</span></span>
+        <button id="hud-folder-btn" class="btn-ghost btn-sm">&#128196; Suspects</button>
+      </div>
+      <div class="hud-slots">
+        <span class="hud-label">EVIDENCE</span>
+        <div id="hud-slot-list" class="slot-list"></div>
+      </div>
+      <div class="hud-right">
+        <button id="btn-conclude" class="btn-danger btn-sm">File Report</button>
+      </div>
+    </div>
+
+    <!-- Floor nav -->
+    <div class="floor-nav">
+      <button class="floor-btn" data-floor="3" id="floor-btn-3">Floor 3<br/><small>Attic</small></button>
+      <button class="floor-btn active" data-floor="2" id="floor-btn-2">Floor 2<br/><small>Bedrooms</small></button>
+      <button class="floor-btn" data-floor="1" id="floor-btn-1">Floor 1<br/><small>Main</small></button>
+    </div>
+
+    <!-- Room map -->
+    <div id="room-map" class="room-map"></div>
+
+    <!-- Room view -->
+    <div id="room-view" class="room-view hidden">
+      <div class="room-header">
+        <button id="btn-back-map" class="btn-ghost btn-sm">&#8592; Floor Map</button>
+        <span id="room-title" class="room-title-label"></span>
+        <span id="room-floor-label" class="room-floor-label"></span>
+      </div>
+      <div id="room-scene" class="room-scene"></div>
+      <p id="room-description" class="room-description"></p>
+      <div id="clue-list" class="clue-list"></div>
+    </div>
+  </div>
+
+  <!-- ENDING SCREEN -->
+  <div id="screen-ending" class="screen">
+    <div class="ending-box">
+      <div class="ending-badge">DETECTIVE'S REPORT</div>
+      <h2 id="ending-title" class="ending-title"></h2>
+      <div class="ending-accusation-box">
+        <span class="ending-accusation-label">CONCLUDED:</span>
+        <span id="ending-accusation" class="ending-accusation-name"></span>
+      </div>
+      <p id="ending-narrative" class="ending-narrative"></p>
+      <div id="ending-key-evidence" class="ending-key-evidence"></div>
+      <div id="ending-progress" class="ending-progress"></div>
+      <button id="btn-next-day" class="btn-primary">Return Tomorrow</button>
+    </div>
+  </div>
+
+  <!-- INCONCLUSIVE SCREEN -->
+  <div id="screen-inconclusive" class="screen">
+    <div class="ending-box">
+      <div class="ending-badge">INCONCLUSIVE</div>
+      <h2 class="ending-title">No Conclusion Reached</h2>
+      <div class="ending-accusation-box" style="border-color:var(--gold-dim);">
+        <span class="ending-accusation-label">STATUS</span>
+        <span class="ending-accusation-name" style="font-size:14px;color:var(--text-dim);">Evidence does not point to a single suspect.</span>
+      </div>
+      <p id="inconclusive-narrative" class="ending-narrative"></p>
+      <button id="btn-try-again" class="btn-primary">Return to Manor</button>
+    </div>
+  </div>
+
+  <!-- TRUE ENDING SCREEN -->
+  <div id="screen-true-ending" class="screen">
+    <div class="ending-box true-ending">
+      <div class="ending-badge truth-badge">THE TRUTH</div>
+      <h2 class="ending-title">Inspector Aldous Croft</h2>
+      <div id="true-ending-evidence" class="true-evidence-board"></div>
+      <p id="true-ending-narrative" class="ending-narrative"></p>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px;">
+        <button id="btn-to-epilogue" class="btn-primary">Continue</button>
+        <button id="btn-restart" class="btn-ghost">Begin Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EPILOGUE SCREEN -->
+  <div id="screen-epilogue" class="screen">
+    <p id="epilogue-quote" class="epilogue-quote"></p>
+  </div>
+
+  <!-- FINAL SCREEN -->
+  <div id="screen-final" class="screen">
+    <div class="final-box">
+      <div class="final-rule"></div>
+      <div class="final-badge">CASE CLOSED</div>
+      <h2 class="final-title">Inspector Aldous Croft</h2>
+      <p class="final-body">The detective assigned to the Hargrove case was found dead in their office that evening. The scene was staged to look like a self-inflicted wound. Inspector Croft signed off on the preliminary report before the body was cold.</p>
+      <p class="final-body">The Hargrove case was officially closed. Unsolved.</p>
+      <p class="final-body">Croft retired six months later with a commendation for distinguished service. No one asked questions. No one was left who knew enough to ask.</p>
+      <p class="final-body">The five reports remain in the record. Five accusations. One truth. One body.</p>
+      <div class="final-rule"></div>
+      <p class="final-sub">Thank you for playing.</p>
+      <div style="display:flex;gap:12px;">
+        <button id="btn-play-again" class="btn-primary">Play Again</button>
+        <button id="btn-credits" class="btn-secondary">Credits</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREDITS OVERLAY -->
+  <div id="overlay-credits" class="overlay hidden">
+    <div class="folder-panel" style="max-width:480px;">
+      <div class="folder-header">
+        <span class="folder-title">Credits</span>
+        <button id="btn-close-credits" class="btn-ghost btn-sm">&#10005; Close</button>
+      </div>
+      <div class="folder-content" style="gap:20px;">
+        <div class="credits-section">
+          <div class="credits-role">Story &amp; Game Design</div>
+          <div class="credits-name">Mai Phan</div>
+        </div>
+        <div class="credits-section">
+          <div class="credits-role">Development</div>
+          <div class="credits-name">Mai Phan</div>
+          <div class="credits-note">Built with HTML, CSS &amp; JavaScript</div>
+        </div>
+        <div class="credits-section">
+          <div class="credits-role">Background Music</div>
+          <div class="credits-name">"Documentary Mystery" — Leberch</div>
+          <div class="credits-note">Pixabay Music Library — Royalty Free</div>
+        </div>
+        <div class="credits-section">
+          <div class="credits-role">Sound Effects</div>
+          <div class="credits-name">Footsteps — freesound_community</div>
+          <div class="credits-name">UI Select — emilianodleon</div>
+          <div class="credits-name">Gunshot — freesound_community</div>
+          <div class="credits-note">Pixabay Sound Effects Library — Royalty Free</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OFFICE SCREEN (final day) -->
+  <div id="screen-office" class="screen">
+    <div class="office-box">
+      <div class="office-art">
+        <div class="desk-top">+-----------------------------------------------+</div>
+        <div class="desk-surface">|  <span class="desk-item folder-item" id="desk-f1">[ — ]</span>   <span class="desk-item folder-item" id="desk-f2">[ — ]</span>   <span class="desk-item folder-item" id="desk-f3">[ — ]</span>  |</div>
+        <div class="desk-surface">|  <span class="desk-item folder-item" id="desk-f4">[ — ]</span>   <span class="desk-item folder-item" id="desk-f5">[ — ]</span>   <span class="desk-item lamp-item">( LAMP )</span>    |</div>
+        <div class="desk-bottom">+-----------------------------------------------+</div>
+      </div>
+      <h2 class="office-title">Your Desk. Morning.</h2>
+      <p class="office-body">Five days. Five reports. Five people you were ready to put away.<br/><br/>The evidence is spread out in front of you. Something has been bothering you since day one.</p>
+      <div id="office-evidence-cards" class="deduction-cards"></div>
+      <div id="office-dialogue" class="deduction-dialogue hidden">
+        <div class="deduction-dialogue-name" id="office-dialogue-name"></div>
+        <p class="deduction-dialogue-text" id="office-dialogue-text"></p>
+      </div>
+      <button id="btn-see-truth" class="btn-primary office-reveal-btn" disabled>Reveal</button>
+    </div>
+  </div>
+
+  <!-- DEDUCTION SCREEN -->
+  <div id="screen-deduction" class="screen">
+    <div class="deduction-box">
+      <div class="deduction-header">
+        <span class="deduction-label">REVIEWING EVIDENCE</span>
+        <span id="deduction-day-label" class="deduction-day"></span>
+      </div>
+      <p class="deduction-instructions">Click each piece of evidence to review your observations before filing the report.</p>
+      <div id="deduction-cards" class="deduction-cards"></div>
+      <div id="deduction-dialogue" class="deduction-dialogue hidden">
+        <div class="deduction-dialogue-name" id="deduction-dialogue-name"></div>
+        <p class="deduction-dialogue-text" id="deduction-dialogue-text"></p>
+      </div>
+      <button id="btn-file-report" class="btn-primary deduction-submit">File Report</button>
+    </div>
+  </div>
+
+  <!-- ROOM THOUGHT PANEL (fixed bottom) -->
+  <div id="room-thought" class="room-thought hidden">
+    <div class="room-thought-label">Already examined</div>
+    <p id="room-thought-text" class="room-thought-text"></p>
+    <span id="room-thought-dismiss" class="room-thought-dismiss">click to continue</span>
+  </div>
+
+  <!-- FADE OVERLAY -->
+  <div id="fade-overlay" class="fade-overlay"></div>
+
+  <!-- SUSPECT FOLDER OVERLAY -->
+  <div id="overlay-folder" class="overlay hidden">
+    <div class="folder-panel">
+      <div class="folder-header">
+        <span class="folder-title">&#128196; SUSPECT STATEMENTS</span>
+        <button id="btn-close-folder" class="btn-ghost btn-sm">&#10005; Close</button>
+      </div>
+      <div class="folder-tabs" id="folder-tabs"></div>
+      <div id="folder-content" class="folder-content"></div>
+    </div>
+  </div>
+
+  <!-- FLOATING FOLDER BUTTON -->
+  <button id="fab-folder" class="fab-folder" title="Suspect Statements">📋</button>
+
+  <!-- MUTE BUTTON -->
+  <button id="btn-mute" class="btn-mute" title="Toggle music">♪</button>
+
+  <!-- BACKGROUND MUSIC -->
+  <audio id="bg-music" src="music.mp3" loop preload="auto" autoplay></audio>
+
+  <!-- FOOTSTEPS -->
+  <audio id="sfx-footsteps" src="footsteps.mp3" preload="auto"></audio>
+
+  <!-- CLICK SFX -->
+  <audio id="sfx-click" src="click.mp3" preload="auto"></audio>
+
+  <!-- EPILOGUE SFX -->
+  <audio id="sfx-epilogue" src="gunshot.mp3" preload="auto"></audio>
+
+  <!-- CLUE PICKUP TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
